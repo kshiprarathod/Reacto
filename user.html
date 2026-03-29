@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reacto - User Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f3f6fb;
+      --panel: #ffffff;
+      --line: #d8e0ea;
+      --text: #0f172a;
+      --muted: #475569;
+      --brand: #1d4ed8;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .sidebar {
+      width: 16rem;
+      background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+      border-right: 1px solid var(--line);
+      padding: 1rem;
+      flex-shrink: 0;
+      overflow-y: auto;
+    }
+
+    @media (max-width: 767px) {
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 64px;
+        height: calc(100vh - 64px);
+        transform: translateX(-100%);
+        transition: transform 0.2s ease;
+        z-index: 50;
+        box-shadow: 0 10px 40px rgba(15, 23, 42, 0.2);
+      }
+
+      .sidebar.show {
+        transform: translateX(0);
+      }
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    .kpi-good { border-left: 4px solid #16a34a; }
+    .kpi-warn { border-left: 4px solid #f59e0b; }
+    .kpi-bad { border-left: 4px solid #dc2626; }
+  </style>
+</head>
+<body>
+  <div class="flex flex-col h-screen">
+    <header class="h-16 bg-white border-b border-slate-200 px-4 lg:px-6 flex items-center justify-between sticky top-0 z-40">
+      <div class="flex items-center gap-3">
+        <button onclick="toggleSidebar()" class="md:hidden p-2 rounded-lg border border-slate-300 text-slate-700" aria-label="Open menu">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+        <a href="website.html" class="flex items-center gap-2">
+          <div class="w-9 h-9 rounded-lg bg-blue-700 text-white flex items-center justify-center font-bold">R</div>
+          <div>
+            <p class="text-sm font-extrabold text-slate-900 leading-none">Reacto</p>
+            <p class="text-[10px] font-bold uppercase tracking-wider text-blue-700">Client</p>
+          </div>
+        </a>
+      </div>
+      <div class="flex items-center gap-4">
+        <span id="welcomeText" class="text-sm font-semibold text-slate-600 hidden sm:inline">Welcome, User</span>
+        <a href="login.html" class="text-sm font-bold text-red-700">Logout</a>
+      </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden">
+      <nav class="sidebar">
+        <div class="flex items-center justify-between mb-5">
+          <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Navigation</p>
+          <button onclick="toggleSidebar()" class="md:hidden text-slate-600">Close</button>
+        </div>
+
+        <div class="space-y-2">
+          <button onclick="switchTab('dashboard', this)" class="nav-tab w-full text-left px-4 py-3 rounded-lg font-bold text-sm bg-blue-700 text-white">Dashboard</button>
+          <button onclick="switchTab('alerts', this)" class="nav-tab w-full text-left px-4 py-3 rounded-lg font-bold text-sm text-slate-700 hover:bg-slate-100">Alerts</button>
+          <button onclick="switchTab('settings', this)" class="nav-tab w-full text-left px-4 py-3 rounded-lg font-bold text-sm text-slate-700 hover:bg-slate-100">Settings</button>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-slate-200 space-y-2 text-sm">
+          <a href="website.html" class="block px-2 py-1 text-slate-700 font-semibold">Home</a>
+          <a href="website.html#inquiry" class="block px-2 py-1 text-slate-700 font-semibold">Support</a>
+        </div>
+      </nav>
+
+      <main class="flex-1 overflow-y-auto p-4 lg:p-6">
+        <div class="max-w-7xl mx-auto space-y-6">
+          <div id="tab-dashboard" class="tab-content active">
+            <div class="mb-2">
+              <h1 id="dashboardTitle" class="text-3xl font-extrabold text-slate-900">User Dashboard</h1>
+              <p id="dashboardSubtitle" class="text-slate-600 mt-1">Operational monitoring and quick actions.</p>
+              <p class="text-xs text-slate-500 mt-1">Professional view active</p>
+            </div>
+
+            <section class="panel p-4 bg-gradient-to-r from-slate-50 to-blue-50 mb-2">
+              <h2 class="text-sm font-black text-slate-700 uppercase tracking-wide mb-3">Client Plant Information</h2>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+                <div class="panel p-3">
+                  <p class="text-xs text-slate-500">Client Name</p>
+                  <p id="clientName" class="font-black text-slate-900 mt-1">Taj Hotels Mumbai</p>
+                </div>
+                <div class="panel p-3">
+                  <p class="text-xs text-slate-500">Total Plants</p>
+                  <p id="clientPlantCount" class="font-black text-blue-800 mt-1">2</p>
+                </div>
+                <div class="panel p-3">
+                  <p class="text-xs text-slate-500">Plant List</p>
+                  <p id="clientPlantList" class="font-black text-slate-900 mt-1">Plant A, Plant B</p>
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <h2 class="text-lg font-bold mb-3">Plant Snapshot</h2>
+              <div id="snapshotCards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-3">
+                <div class="panel p-4 border-l-4 border-blue-600 bg-gradient-to-br from-blue-50 to-white"><p class="text-xs font-semibold text-blue-800">Inflow</p><p class="text-2xl font-extrabold mt-1 text-blue-900">125</p><p class="text-xs text-slate-500">MLD</p></div>
+                <div class="panel p-4 border-l-4 border-emerald-600 bg-gradient-to-br from-emerald-50 to-white"><p class="text-xs font-semibold text-emerald-800">Treated Water</p><p class="text-2xl font-extrabold mt-1 text-emerald-900">118</p><p class="text-xs text-slate-500">MLD</p></div>
+                <div class="panel p-4 border-l-4 border-cyan-600 bg-gradient-to-br from-cyan-50 to-white"><p class="text-xs font-semibold text-cyan-800">Reused Water</p><p class="text-2xl font-extrabold mt-1 text-cyan-900">85</p><p class="text-xs text-slate-500">MLD</p></div>
+                <div class="panel p-4 border-l-4 border-indigo-600 bg-gradient-to-br from-indigo-50 to-white"><p class="text-xs font-semibold text-indigo-800">BOD</p><p class="text-2xl font-extrabold mt-1 text-indigo-900">45</p><p class="text-xs text-slate-500">mg/L</p></div>
+                <div class="panel p-4 border-l-4 border-orange-500 bg-gradient-to-br from-orange-50 to-white"><p class="text-xs font-semibold text-orange-800">COD</p><p class="text-2xl font-extrabold mt-1 text-orange-900">120</p><p class="text-xs text-slate-500">mg/L</p></div>
+                <div class="panel p-4 border-l-4 border-teal-600 bg-gradient-to-br from-teal-50 to-white"><p class="text-xs font-semibold text-teal-800">Turbidity</p><p class="text-2xl font-extrabold mt-1 text-teal-900">2.5</p><p class="text-xs text-slate-500">NTU</p></div>
+                <div class="panel p-4 border-l-4 border-sky-600 bg-gradient-to-br from-sky-50 to-white"><p class="text-xs font-semibold text-sky-800">Chlorine</p><p class="text-2xl font-extrabold mt-1 text-sky-900">0.8</p><p class="text-xs text-slate-500">mg/L</p></div>
+              </div>
+            </section>
+
+            <section>
+              <h2 class="text-lg font-bold mb-3">24-Hour Trends</h2>
+              <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                <div class="panel p-4 bg-gradient-to-br from-blue-50 to-indigo-50">
+                  <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-bold">BOD Trend</h3>
+                    <div class="text-right">
+                      <span class="text-xs font-semibold text-blue-700">mg/L</span>
+                      <p id="bodPeakNote" class="text-[11px] text-blue-600 font-bold">Sample live data</p>
+                    </div>
+                  </div>
+                  <div class="panel bg-white p-3">
+                    <svg id="bodChart" class="w-full block overflow-hidden" style="height: 190px;"></svg>
+                  </div>
+                  <div class="grid grid-cols-3 gap-2 mt-3 text-center">
+                    <div class="panel p-2 bg-blue-100"><p class="text-xs text-slate-600">Low</p><p id="bodLow" class="font-bold text-blue-800">28</p></div>
+                    <div class="panel p-2 bg-indigo-100"><p class="text-xs text-slate-600">Avg</p><p id="bodAvg" class="font-bold text-indigo-800">45</p></div>
+                    <div class="panel p-2 bg-red-100"><p class="text-xs text-slate-600">High</p><p id="bodHigh" class="font-bold text-red-700">58</p></div>
+                  </div>
+                </div>
+
+                <div class="panel p-4 bg-gradient-to-br from-orange-50 to-red-50">
+                  <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-bold">COD Trend</h3>
+                    <div class="text-right">
+                      <span class="text-xs font-semibold text-orange-700">mg/L</span>
+                      <p id="codPeakNote" class="text-[11px] text-orange-600 font-bold">Sample live data</p>
+                    </div>
+                  </div>
+                  <div class="panel bg-white p-3">
+                    <svg id="codChart" class="w-full block overflow-hidden" style="height: 190px;"></svg>
+                  </div>
+                  <div class="grid grid-cols-3 gap-2 mt-3 text-center">
+                    <div class="panel p-2 bg-orange-100"><p class="text-xs text-slate-600">Low</p><p id="codLow" class="font-bold text-orange-800">80</p></div>
+                    <div class="panel p-2 bg-amber-100"><p class="text-xs text-slate-600">Avg</p><p id="codAvg" class="font-bold text-amber-800">120</p></div>
+                    <div class="panel p-2 bg-red-100"><p class="text-xs text-slate-600">High</p><p id="codHigh" class="font-bold text-red-700">145</p></div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+              <div class="panel p-4">
+                <h3 class="font-bold mb-3">Live Monitoring</h3>
+                <div class="grid grid-cols-2 gap-2 mb-3 text-sm">
+                  <div class="panel p-3 bg-emerald-50 border-emerald-200"><span class="text-slate-500">Sensor A</span><p class="font-bold text-green-700">Online</p></div>
+                  <div class="panel p-3 bg-emerald-50 border-emerald-200"><span class="text-slate-500">Sensor B</span><p class="font-bold text-green-700">Online</p></div>
+                  <div class="panel p-3 bg-amber-50 border-amber-200"><span class="text-slate-500">Sensor C</span><p class="font-bold text-amber-700">Delayed</p></div>
+                  <div class="panel p-3 bg-red-50 border-red-200"><span class="text-slate-500">Sensor D</span><p class="font-bold text-red-700">Offline</p></div>
+                </div>
+                <div class="panel bg-white p-2">
+                  <svg id="liveChart" class="w-full block overflow-hidden" style="height: 170px;"></svg>
+                  <p id="livePointLabel" class="text-xs text-slate-500 mt-2">Latest point: --</p>
+                </div>
+              </div>
+
+              <div class="panel p-4">
+                <h3 class="font-bold mb-3">Monthly Summary</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                  <div class="panel p-3 bg-blue-50 border-blue-200"><p class="text-xs text-blue-700 font-semibold">BOD Avg</p><p class="text-2xl font-extrabold text-blue-900">43</p><p class="text-xs text-slate-500">mg/L</p></div>
+                  <div class="panel p-3 bg-orange-50 border-orange-200"><p class="text-xs text-orange-700 font-semibold">COD Avg</p><p class="text-2xl font-extrabold text-orange-900">118</p><p class="text-xs text-slate-500">mg/L</p></div>
+                  <div class="panel p-3 bg-emerald-50 border-emerald-200"><p class="text-xs text-emerald-700 font-semibold">Total Treated</p><p class="text-2xl font-extrabold text-emerald-900">84,600</p><p class="text-xs text-slate-500">ML / month</p></div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div id="tab-alerts" class="tab-content">
+            <h1 class="text-2xl font-extrabold mb-3">Alerts</h1>
+            <div class="space-y-3">
+              <div class="panel p-4 kpi-bad bg-gradient-to-r from-red-50 to-rose-50 border-red-200"><p class="font-bold text-red-900">Critical: High BOD</p><p class="text-sm text-red-700 mt-1">BOD crossed threshold at Plant A.</p><button onclick="markRead(this)" class="mt-3 text-sm bg-red-700 hover:bg-red-800 text-white font-bold px-4 py-2 rounded-lg">Mark as read</button></div>
+              <div class="panel p-4 kpi-warn bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-200"><p class="font-bold text-amber-900">Warning: High COD</p><p class="text-sm text-amber-700 mt-1">COD trend rising for last 45 minutes.</p><button onclick="markRead(this)" class="mt-3 text-sm bg-amber-600 hover:bg-amber-700 text-white font-bold px-4 py-2 rounded-lg">Mark as read</button></div>
+              <div class="panel p-4 kpi-warn bg-gradient-to-r from-orange-50 to-amber-50 border-orange-200"><p class="font-bold text-orange-900">Warning: Turbidity High</p><p class="text-sm text-orange-700 mt-1">Turbidity above preferred range.</p><button onclick="markRead(this)" class="mt-3 text-sm bg-orange-600 hover:bg-orange-700 text-white font-bold px-4 py-2 rounded-lg">Mark as read</button></div>
+              <div class="panel p-4 kpi-bad bg-gradient-to-r from-red-50 to-pink-50 border-red-200"><p class="font-bold text-red-900">Critical: Sensor Failure</p><p class="text-sm text-red-700 mt-1">Sensor C intermittent signal loss.</p><button onclick="markRead(this)" class="mt-3 text-sm bg-red-700 hover:bg-red-800 text-white font-bold px-4 py-2 rounded-lg">Mark as read</button></div>
+            </div>
+          </div>
+
+          <div id="tab-settings" class="tab-content">
+            <h1 class="text-2xl font-extrabold mb-3">Settings</h1>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div class="panel p-4">
+                <h2 class="font-bold mb-3">Profile</h2>
+                <div class="space-y-2">
+                  <input class="w-full border border-slate-300 rounded-lg px-3 py-2" value="Rajesh Sharma">
+                  <input class="w-full border border-slate-300 rounded-lg px-3 py-2" value="rajesh@company.in">
+                  <button class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-lg py-2">Save</button>
+                </div>
+              </div>
+              <div class="panel p-4">
+                <h2 class="font-bold mb-3">Plant Details</h2>
+                <div class="space-y-2 text-sm">
+                  <div class="panel p-3"><span class="text-slate-500">Plant</span><p id="settingsPlantName" class="font-semibold">Taj Hotels Mumbai - WTP</p></div>
+                  <div class="panel p-3"><span class="text-slate-500">Capacity</span><p class="font-semibold">500 MLD</p></div>
+                  <div class="panel p-3"><span class="text-slate-500">Status</span><p class="font-semibold text-green-700">Operational</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      document.querySelector('.sidebar').classList.toggle('show');
+    }
+
+    function switchTab(tabId, button) {
+      document.querySelectorAll('.tab-content').forEach(function (tab) {
+        tab.classList.remove('active');
+      });
+
+      document.querySelectorAll('.nav-tab').forEach(function (nav) {
+        nav.classList.remove('bg-blue-700', 'text-white');
+        nav.classList.add('text-slate-700', 'hover:bg-slate-100');
+      });
+
+      document.getElementById('tab-' + tabId).classList.add('active');
+      button.classList.remove('text-slate-700', 'hover:bg-slate-100');
+      button.classList.add('bg-blue-700', 'text-white');
+
+      if (window.innerWidth < 768) {
+        document.querySelector('.sidebar').classList.remove('show');
+      }
+
+      if (tabId === 'dashboard') {
+        setTimeout(forceChartRepaint, 120);
+      }
+    }
+
+    function markRead(button) {
+      const card = button.closest('.panel');
+      card.style.opacity = '0.6';
+      button.disabled = true;
+      button.textContent = 'Read';
+    }
+
+    function buildTimeLabel() {
+      const now = new Date();
+      return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function updateStatCards(values, prefix) {
+      const low = Math.min.apply(null, values);
+      const high = Math.max.apply(null, values);
+      const avg = Math.round(values.reduce(function (sum, v) { return sum + v; }, 0) / values.length);
+
+      document.getElementById(prefix + 'Low').textContent = low;
+      document.getElementById(prefix + 'Avg').textContent = avg;
+      document.getElementById(prefix + 'High').textContent = high;
+
+      const peakIndex = values.indexOf(high);
+      const peakLabel = chartStore[prefix].labels[peakIndex] || 'now';
+      document.getElementById(prefix + 'PeakNote').textContent = 'Peak ' + high + ' at ' + peakLabel;
+    }
+
+    const chartStore = {
+      bod: {
+        labels: ['12:00', '12:05', '12:10', '12:15', '12:20', '12:25', '12:30', '12:35'],
+        values: [38, 40, 43, 47, 50, 46, 44, 41],
+        min: 20,
+        max: 65
+      },
+      cod: {
+        labels: ['12:00', '12:05', '12:10', '12:15', '12:20', '12:25', '12:30', '12:35'],
+        values: [108, 112, 116, 121, 126, 124, 119, 117],
+        min: 70,
+        max: 160
+      },
+      live: {
+        labels: ['12:00', '12:05', '12:10', '12:15', '12:20', '12:25', '12:30', '12:35'],
+        values: [62, 64, 68, 72, 76, 74, 71, 73],
+        min: 20,
+        max: 100
+      }
+    };
+
+    function renderSvgLineChart(svgId, labels, values, config) {
+      const svg = document.getElementById(svgId);
+      if (!svg || !values.length) {
+        return;
+      }
+
+      const width = Math.max(svg.clientWidth, 320);
+      const height = parseInt(svg.style.height, 10) || 160;
+      const pad = { left: 34, right: 10, top: 10, bottom: 24 };
+      const plotW = width - pad.left - pad.right;
+      const plotH = height - pad.top - pad.bottom;
+      const min = config.min;
+      const max = config.max;
+
+      const points = values.map(function (v, i) {
+        const x = pad.left + (plotW * i) / Math.max(values.length - 1, 1);
+        const y = pad.top + ((max - v) / Math.max(max - min, 1)) * plotH;
+        return { x: x, y: y };
+      });
+
+      const linePoints = points.map(function (p) { return p.x.toFixed(2) + ',' + p.y.toFixed(2); }).join(' ');
+      const areaPoints = pad.left + ',' + (pad.top + plotH)
+        + ' ' + linePoints
+        + ' ' + (pad.left + plotW) + ',' + (pad.top + plotH);
+
+      let grid = '';
+      for (let i = 0; i <= 4; i += 1) {
+        const y = (pad.top + (plotH / 4) * i).toFixed(2);
+        grid += '<line x1="' + pad.left + '" y1="' + y + '" x2="' + (pad.left + plotW) + '" y2="' + y + '" stroke="' + config.gridColor + '" stroke-width="1" stroke-dasharray="4 4" />';
+      }
+
+      let yTicks = '';
+      const yStep = (max - min) / 4;
+      for (let i = 0; i <= 4; i += 1) {
+        const value = Math.round(max - yStep * i);
+        const y = (pad.top + (plotH / 4) * i + 3).toFixed(2);
+        yTicks += '<text x="4" y="' + y + '" font-size="10" fill="#64748b">' + (config.percent ? value + '%' : value) + '</text>';
+      }
+
+      const xIndexes = [0, Math.floor((labels.length - 1) / 2), labels.length - 1].filter(function (x, i, arr) {
+        return x >= 0 && arr.indexOf(x) === i;
+      });
+      let xTicks = '';
+      xIndexes.forEach(function (idx) {
+        const x = (pad.left + (plotW * idx) / Math.max(labels.length - 1, 1)).toFixed(2);
+        const label = labels[idx];
+        xTicks += '<text x="' + (x - 14) + '" y="' + (height - 6) + '" font-size="10" fill="#64748b">' + label + '</text>';
+      });
+
+      const circles = points.map(function (p) {
+        return '<circle cx="' + p.x.toFixed(2) + '" cy="' + p.y.toFixed(2) + '" r="2.8" fill="' + config.pointColor + '" />';
+      }).join('');
+
+      const gradientId = svgId + 'Gradient';
+      svg.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
+      svg.setAttribute('preserveAspectRatio', 'none');
+      svg.innerHTML = ''
+        + '<defs><linearGradient id="' + gradientId + '" x1="0" y1="0" x2="0" y2="1">'
+        + '<stop offset="0%" stop-color="' + config.fillTop + '" />'
+        + '<stop offset="100%" stop-color="' + config.fillBottom + '" />'
+        + '</linearGradient></defs>'
+        + grid
+        + '<polygon points="' + areaPoints + '" fill="url(#' + gradientId + ')" />'
+        + '<polyline points="' + linePoints + '" fill="none" stroke="' + config.lineColor + '" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />'
+        + circles
+        + yTicks
+        + xTicks;
+    }
+
+    function renderAllCharts() {
+      renderSvgLineChart('bodChart', chartStore.bod.labels, chartStore.bod.values, {
+        min: chartStore.bod.min,
+        max: chartStore.bod.max,
+        gridColor: '#dbeafe',
+        lineColor: '#2563eb',
+        pointColor: '#1d4ed8',
+        fillTop: 'rgba(37, 99, 235, 0.30)',
+        fillBottom: 'rgba(37, 99, 235, 0.03)'
+      });
+
+      renderSvgLineChart('codChart', chartStore.cod.labels, chartStore.cod.values, {
+        min: chartStore.cod.min,
+        max: chartStore.cod.max,
+        gridColor: '#ffedd5',
+        lineColor: '#ea580c',
+        pointColor: '#c2410c',
+        fillTop: 'rgba(234, 88, 12, 0.30)',
+        fillBottom: 'rgba(234, 88, 12, 0.03)'
+      });
+
+      renderSvgLineChart('liveChart', chartStore.live.labels, chartStore.live.values, {
+        min: chartStore.live.min,
+        max: chartStore.live.max,
+        gridColor: '#dbeafe',
+        lineColor: '#0284c7',
+        pointColor: '#0369a1',
+        fillTop: 'rgba(2, 132, 199, 0.30)',
+        fillBottom: 'rgba(2, 132, 199, 0.03)',
+        percent: true
+      });
+    }
+
+    function initializeCharts() {
+      renderAllCharts();
+      updateStatCards(chartStore.bod.values, 'bod');
+      updateStatCards(chartStore.cod.values, 'cod');
+      document.getElementById('livePointLabel').textContent = 'Latest point: ' + chartStore.live.values[chartStore.live.values.length - 1] + '% at ' + chartStore.live.labels[chartStore.live.labels.length - 1];
+    }
+
+    function forceChartRepaint() {
+      renderAllCharts();
+    }
+
+    function pushLiveValue(storeKey, nextValue) {
+      const store = chartStore[storeKey];
+      store.labels.push(buildTimeLabel());
+      store.values.push(nextValue);
+
+      if (store.labels.length > 12) {
+        store.labels.shift();
+        store.values.shift();
+      }
+    }
+
+    function startLiveUpdates() {
+      setInterval(function () {
+        const lastBod = chartStore.bod.values[chartStore.bod.values.length - 1];
+        const bodNext = Math.max(chartStore.bod.min, Math.min(chartStore.bod.max, Math.round(lastBod + (Math.random() * 8 - 4))));
+        pushLiveValue('bod', bodNext);
+        updateStatCards(chartStore.bod.values, 'bod');
+
+        const lastCod = chartStore.cod.values[chartStore.cod.values.length - 1];
+        const codNext = Math.max(chartStore.cod.min, Math.min(chartStore.cod.max, Math.round(lastCod + (Math.random() * 12 - 6))));
+        pushLiveValue('cod', codNext);
+        updateStatCards(chartStore.cod.values, 'cod');
+
+        const lastLive = chartStore.live.values[chartStore.live.values.length - 1];
+        const liveNext = Math.max(chartStore.live.min, Math.min(chartStore.live.max, Math.round(lastLive + (Math.random() * 10 - 5))));
+        pushLiveValue('live', liveNext);
+        const latestLabel = chartStore.live.labels[chartStore.live.labels.length - 1];
+        document.getElementById('livePointLabel').textContent = 'Latest point: ' + liveNext + '% at ' + latestLabel;
+
+        renderAllCharts();
+      }, 4000);
+    }
+
+    function applyClientDetails() {
+      const params = new URLSearchParams(window.location.search);
+      const client = params.get('client');
+      const clientProfiles = {
+        'Taj Hotels Mumbai': {
+          plants: 2,
+          list: 'Plant A, Plant B',
+          inflow: '125',
+          treated: '118',
+          reused: '85'
+        },
+        'Indian Hotels Group': {
+          plants: 3,
+          list: 'Plant C, Plant D, Plant E',
+          inflow: '168',
+          treated: '159',
+          reused: '112'
+        },
+        'Metro Residency': {
+          plants: 1,
+          list: 'Plant F',
+          inflow: '62',
+          treated: '58',
+          reused: '41'
+        }
+      };
+
+      const selectedClient = clientProfiles[client] ? client : 'Taj Hotels Mumbai';
+      const profile = clientProfiles[selectedClient];
+
+      document.getElementById('welcomeText').textContent = 'Welcome, ' + selectedClient;
+      document.getElementById('dashboardTitle').textContent = selectedClient + ' Dashboard';
+      document.getElementById('dashboardSubtitle').textContent = 'Operational monitoring for ' + selectedClient + '.';
+      document.getElementById('clientName').textContent = selectedClient;
+      document.getElementById('clientPlantCount').textContent = profile.plants;
+      document.getElementById('clientPlantList').textContent = profile.list;
+      document.getElementById('settingsPlantName').textContent = selectedClient + ' - WTP';
+
+      const snapshotCards = document.querySelectorAll('#snapshotCards > div');
+      if (snapshotCards.length >= 3) {
+        snapshotCards[0].querySelector('p.text-2xl').textContent = profile.inflow;
+        snapshotCards[1].querySelector('p.text-2xl').textContent = profile.treated;
+        snapshotCards[2].querySelector('p.text-2xl').textContent = profile.reused;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      applyClientDetails();
+      initializeCharts();
+      startLiveUpdates();
+
+      // Force repaint after layout settles so charts are visible on first load.
+      setTimeout(forceChartRepaint, 80);
+      setTimeout(forceChartRepaint, 300);
+    });
+
+    window.addEventListener('resize', function () {
+      setTimeout(forceChartRepaint, 120);
+    });
+  </script>
+</body>
+</html>
