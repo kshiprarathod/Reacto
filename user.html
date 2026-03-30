@@ -589,10 +589,57 @@
       }, 4000);
     }
 
+    function normalizeClientKey(companyName) {
+      return String(companyName || '')
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+    }
+
+    function createProfileFromCustomClient(record) {
+      const plants = Array.isArray(record.plants) ? record.plants : [];
+      const plantNames = plants.map(function (plant) { return plant.name; }).filter(Boolean);
+      const totalCapacity = plants.reduce(function (sum, plant) {
+        const capacity = Number(plant.capacity);
+        return sum + (Number.isFinite(capacity) ? capacity : 0);
+      }, 0);
+
+      const safeCapacity = Math.max(totalCapacity, 0);
+      return {
+        plants: plants.length || 1,
+        list: plantNames.length ? plantNames.join(', ') : 'Plant 1',
+        inflow: String(Math.round(safeCapacity || 80)),
+        treated: String(Math.round((safeCapacity || 80) * 0.94)),
+        reused: String(Math.round((safeCapacity || 80) * 0.72))
+      };
+    }
+
+    function readCustomClientProfiles() {
+      let storedClients;
+      try {
+        storedClients = JSON.parse(localStorage.getItem('reactoCustomClients') || '{}');
+      } catch (error) {
+        storedClients = {};
+      }
+
+      const profilesByName = {};
+      Object.keys(storedClients).forEach(function (clientId) {
+        const record = storedClients[clientId];
+        if (!record || !record.name) {
+          return;
+        }
+
+        profilesByName[record.name] = createProfileFromCustomClient(record);
+      });
+
+      return profilesByName;
+    }
+
     function applyClientDetails() {
       const params = new URLSearchParams(window.location.search);
       const client = params.get('client');
-      const clientProfiles = {
+      const defaultProfiles = {
         'Taj Hotels Mumbai': {
           plants: 2,
           list: 'Plant A, Plant B',
@@ -613,10 +660,32 @@
           inflow: '62',
           treated: '58',
           reused: '41'
+        },
+        'Sunline Industries': {
+          plants: 2,
+          list: 'Plant G, Plant H',
+          inflow: '93',
+          treated: '88',
+          reused: '67'
         }
       };
 
-      const selectedClient = clientProfiles[client] ? client : 'Taj Hotels Mumbai';
+      const clientProfiles = Object.assign({}, defaultProfiles, readCustomClientProfiles());
+
+      let selectedClient = 'Taj Hotels Mumbai';
+      if (client && clientProfiles[client]) {
+        selectedClient = client;
+      } else if (client) {
+        const requestedKey = normalizeClientKey(client);
+        const matchedClientName = Object.keys(clientProfiles).find(function (name) {
+          return normalizeClientKey(name) === requestedKey;
+        });
+
+        if (matchedClientName) {
+          selectedClient = matchedClientName;
+        }
+      }
+
       const profile = clientProfiles[selectedClient];
 
       document.getElementById('welcomeText').textContent = 'Welcome, ' + selectedClient;
