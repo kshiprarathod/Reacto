@@ -1,0 +1,9 @@
+Client,Plant,Capacity_MLD,Status,BOD_mg_L,COD_mg_L,Updated_At
+Taj Hotels Mumbai,Plant A,500,Operational,45,120,2026-03-30 16:00
+Taj Hotels Mumbai,Plant B,450,Warning,78,180,2026-03-30 16:00
+Indian Hotels Group,Plant C,400,Operational,38,105,2026-03-30 16:00
+Indian Hotels Group,Plant D,350,Operational,41,112,2026-03-30 16:00
+Indian Hotels Group,Plant E,300,Operational,39,108,2026-03-30 16:00
+Metro Residency,Plant F,200,Operational,42,118,2026-03-30 16:00
+Sunline Industries,Plant G,260,Operational,37,102,2026-03-30 16:00
+Sunline Industries,Plant H,230,Operational,40,110,2026-03-30 16:00

@@ -165,6 +165,26 @@
     .pill-amber { background: #fef3c7; color: #b45309; }
     .pill-red { background: #fee2e2; color: #dc2626; }
 
+    .graph-action-btn {
+      border: 1px solid #dbe3ef;
+      border-radius: 999px;
+      padding: 0.3rem 0.78rem;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      color: #334155;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      box-shadow: 0 8px 16px -14px rgba(15, 23, 42, 0.8);
+      transition: all 0.16s ease;
+    }
+
+    .graph-action-btn:hover {
+      border-color: #93c5fd;
+      color: #1d4ed8;
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px -16px rgba(29, 78, 216, 0.8);
+    }
+
     .admin-content h2,
     .admin-content h3 {
       letter-spacing: -0.01em;
@@ -185,6 +205,59 @@
     .client-info-card:focus-visible {
       outline: 2px solid #1d4ed8;
       outline-offset: 2px;
+    }
+
+    .series-switch {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.55rem;
+    }
+
+    .series-switch-btn {
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      color: #334155;
+      border-radius: 999px;
+      padding: 0.33rem 0.74rem;
+      font-size: 12px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.38rem;
+      transition: all 0.16s ease;
+    }
+
+    .series-switch-btn:hover {
+      border-color: #93c5fd;
+      color: #1d4ed8;
+    }
+
+    .series-switch-btn .check-dot {
+      width: 15px;
+      height: 15px;
+      border-radius: 999px;
+      border: 1px solid #94a3b8;
+      font-size: 10px;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: transparent;
+      background: #ffffff;
+      flex-shrink: 0;
+    }
+
+    .series-switch-btn.active {
+      border-color: #93c5fd;
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .series-switch-btn.active .check-dot {
+      border-color: #1d4ed8;
+      background: #1d4ed8;
+      color: #ffffff;
     }
     
     .sidebar.collapsed {
@@ -393,9 +466,19 @@
               <div class="chart-card bg-white rounded-xl p-6 shadow-sm border border-slate-200">
                 <div class="flex items-center justify-between mb-4">
                   <h2 class="text-lg font-black text-slate-900">BOD/COD 7-Day Trends</h2>
-                  <span class="pill-tag pill-amber">7 Days</span>
+                  <button type="button" class="graph-action-btn">7 Days</button>
                 </div>
                 <div class="chart-container"><canvas id="trendChart"></canvas></div>
+                <div class="series-switch" id="trendSeriesSwitch" role="radiogroup" aria-label="Select trend series">
+                  <button type="button" class="series-switch-btn active" data-series="bod" aria-pressed="true">
+                    <span class="check-dot">✓</span>
+                    BOD
+                  </button>
+                  <button type="button" class="series-switch-btn" data-series="cod" aria-pressed="false">
+                    <span class="check-dot">✓</span>
+                    COD
+                  </button>
+                </div>
               </div>
 
               <div class="chart-card bg-white rounded-xl p-6 shadow-sm border border-slate-200">
@@ -571,7 +654,7 @@
                       </div>
                     </td>
                     <td class="px-6 py-4"><span class="px-3 py-1 bg-green-100 text-green-700 rounded text-xs font-black">Active</span></td>
-                    <td class="px-6 py-4 text-center space-x-2"><button onclick="openClientDetails('taj-hotels-mumbai')" class="text-slate-700 font-black">View</button><a href="user.html?client=Taj%20Hotels%20Mumbai" class="text-emerald-600 font-black">Open Dashboard</a><button onclick="openModal('editClient')" class="text-blue-600 font-black">Edit</button></td>
+                    <td class="px-6 py-4 text-center"><button onclick="openClientDetails('taj-hotels-mumbai')" class="text-slate-700 font-black">View</button></td>
                   </tr>
                   <tr class="hover:bg-slate-50">
                     <td class="px-6 py-4 font-semibold"><button onclick="openClientDetails('indian-hotels-group')" class="text-blue-700 hover:underline font-semibold">Indian Hotels Group</button></td>
@@ -592,7 +675,7 @@
                       </div>
                     </td>
                     <td class="px-6 py-4"><span class="px-3 py-1 bg-green-100 text-green-700 rounded text-xs font-black">Active</span></td>
-                    <td class="px-6 py-4 text-center space-x-2"><button onclick="openClientDetails('indian-hotels-group')" class="text-slate-700 font-black">View</button><a href="user.html?client=Indian%20Hotels%20Group" class="text-emerald-600 font-black">Open Dashboard</a><button onclick="openModal('editClient')" class="text-blue-600 font-black">Edit</button></td>
+                    <td class="px-6 py-4 text-center"><button onclick="openClientDetails('indian-hotels-group')" class="text-slate-700 font-black">View</button></td>
                   </tr>
                   <tr class="hover:bg-slate-50">
                     <td class="px-6 py-4 font-semibold"><button onclick="openClientDetails('metro-residency')" class="text-blue-700 hover:underline font-semibold">Metro Residency</button></td>
@@ -611,7 +694,7 @@
                       </div>
                     </td>
                     <td class="px-6 py-4"><span class="px-3 py-1 bg-green-100 text-green-700 rounded text-xs font-black">Active</span></td>
-                    <td class="px-6 py-4 text-center space-x-2"><button onclick="openClientDetails('metro-residency')" class="text-slate-700 font-black">View</button><a href="user.html?client=Metro%20Residency" class="text-emerald-600 font-black">Open Dashboard</a><button onclick="openModal('editClient')" class="text-blue-600 font-black">Edit</button></td>
+                    <td class="px-6 py-4 text-center"><button onclick="openClientDetails('metro-residency')" class="text-slate-700 font-black">View</button></td>
                   </tr>
                 </tbody>
               </table>
@@ -621,19 +704,164 @@
           <!-- ALERTS TAB -->
           <div id="tab-alerts" class="tab-content space-y-6">
             <h2 class="text-2xl font-black text-slate-900">Alert Control</h2>
-            <div class="bg-red-50 border-l-4 border-red-600 rounded-lg p-4 flex justify-between">
-              <div>
-                <h3 class="font-black text-red-900">Critical: BOD High</h3>
-                <p class="text-sm text-red-700 mt-1">Plant B exceeded 150 mg/L</p>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+              <div class="panel p-3 bg-red-50 border-red-200">
+                <p class="text-xs font-black text-red-700 uppercase">Critical</p>
+                <p class="text-2xl font-black text-red-900 mt-1">2</p>
+                <p class="text-xs text-red-600">Needs immediate action</p>
               </div>
-              <button onclick="openModal('alertAction')" class="bg-red-600 text-white px-4 py-2 rounded font-black">Action</button>
+              <div class="panel p-3 bg-amber-50 border-amber-200">
+                <p class="text-xs font-black text-amber-700 uppercase">Warning</p>
+                <p class="text-2xl font-black text-amber-900 mt-1">5</p>
+                <p class="text-xs text-amber-700">Watch closely</p>
+              </div>
+              <div class="panel p-3 bg-blue-50 border-blue-200">
+                <p class="text-xs font-black text-blue-700 uppercase">Info</p>
+                <p class="text-2xl font-black text-blue-900 mt-1">4</p>
+                <p class="text-xs text-blue-700">Routine updates</p>
+              </div>
+              <div class="panel p-3 bg-emerald-50 border-emerald-200">
+                <p class="text-xs font-black text-emerald-700 uppercase">Resolved Today</p>
+                <p class="text-2xl font-black text-emerald-900 mt-1">7</p>
+                <p class="text-xs text-emerald-700">Closed by operators</p>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <div class="bg-red-50 border-l-4 border-red-600 rounded-lg p-4 flex justify-between gap-3">
+                <div>
+                  <h3 class="font-black text-red-900">Critical: BOD High</h3>
+                  <p class="text-sm text-red-700 mt-1">Plant B exceeded 150 mg/L at 16:12.</p>
+                  <p class="text-xs text-red-600 mt-1">4 min ago</p>
+                </div>
+                <button onclick="openModal('alertAction')" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-black h-fit">Action</button>
+              </div>
+
+              <div class="bg-amber-50 border-l-4 border-amber-500 rounded-lg p-4 flex justify-between gap-3">
+                <div>
+                  <h3 class="font-black text-amber-900">Warning: COD Rising</h3>
+                  <p class="text-sm text-amber-800 mt-1">Plant D COD trend increased 18% in last hour.</p>
+                  <p class="text-xs text-amber-700 mt-1">11 min ago</p>
+                </div>
+                <button onclick="openModal('alertAction')" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded font-black h-fit">Assign</button>
+              </div>
+
+              <div class="bg-amber-50 border-l-4 border-amber-500 rounded-lg p-4 flex justify-between gap-3">
+                <div>
+                  <h3 class="font-black text-amber-900">Warning: Turbidity Spike</h3>
+                  <p class="text-sm text-amber-800 mt-1">Plant F crossed preferred turbidity range for 8 minutes.</p>
+                  <p class="text-xs text-amber-700 mt-1">19 min ago</p>
+                </div>
+                <button onclick="openModal('alertAction')" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded font-black h-fit">Assign</button>
+              </div>
+
+              <div class="bg-blue-50 border-l-4 border-blue-500 rounded-lg p-4 flex justify-between gap-3">
+                <div>
+                  <h3 class="font-black text-blue-900">Info: Maintenance Reminder</h3>
+                  <p class="text-sm text-blue-800 mt-1">Plant A sensor calibration window starts tomorrow 09:00.</p>
+                  <p class="text-xs text-blue-700 mt-1">35 min ago</p>
+                </div>
+                <button onclick="openModal('alertAction')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-black h-fit">Plan</button>
+              </div>
+
+              <div class="bg-red-50 border-l-4 border-red-600 rounded-lg p-4 flex justify-between gap-3">
+                <div>
+                  <h3 class="font-black text-red-900">Critical: Communication Loss</h3>
+                  <p class="text-sm text-red-700 mt-1">Plant H gateway offline for 6 minutes.</p>
+                  <p class="text-xs text-red-600 mt-1">Just now</p>
+                </div>
+                <button onclick="openModal('alertAction')" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-black h-fit">Escalate</button>
+              </div>
             </div>
           </div>
 
           <!-- REPORTS TAB -->
           <div id="tab-reports" class="tab-content space-y-6">
-            <h2 class="text-2xl font-black text-slate-900">Reports</h2>
-            <button onclick="openModal('generateReport')" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-black">📊 Generate Report</button>
+            <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3">
+              <div>
+                <h2 class="text-2xl font-black text-slate-900">Reports</h2>
+                <p class="text-sm text-slate-600 mt-1">Download CSV exports for plant performance and client-wise operations.</p>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <a href="reports/monthly-plant-summary.csv" download onclick="trackReportDownload('monthly-plant-summary.csv', 8)" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-black text-sm">⬇ Download Latest CSV</a>
+                <button onclick="downloadClientSnapshotCsv()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-black text-sm">⬇ Download Live Snapshot</button>
+                <button onclick="openModal('generateReport')" class="bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-lg font-black text-sm">📊 Generate Report</button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div class="panel p-4 bg-blue-50 border-blue-200">
+                <p class="text-xs text-blue-700 font-black uppercase tracking-wide">Available CSV</p>
+                <p class="text-3xl font-black text-blue-900 mt-1">2</p>
+                <p class="text-xs text-blue-700">Static + live snapshot</p>
+              </div>
+              <div class="panel p-4 bg-emerald-50 border-emerald-200">
+                <p class="text-xs text-emerald-700 font-black uppercase tracking-wide">Rows Included</p>
+                <p id="reportRowsCount" class="text-3xl font-black text-emerald-900 mt-1">8</p>
+                <p class="text-xs text-emerald-700">Plant-wise entries</p>
+              </div>
+              <div class="panel p-4 bg-amber-50 border-amber-200">
+                <p class="text-xs text-amber-700 font-black uppercase tracking-wide">Total Downloads</p>
+                <p id="reportDownloadCount" class="text-3xl font-black text-amber-900 mt-1">0</p>
+                <p id="reportsLastUpdated" class="text-xs text-amber-700">Not downloaded yet</p>
+              </div>
+            </div>
+
+            <div class="data-table-wrap bg-white rounded-xl shadow-sm border border-slate-200 p-4 space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="text-lg font-black text-slate-900">CSV Library</h3>
+                <span class="pill-tag pill-blue">Ready to download</span>
+              </div>
+
+              <div class="space-y-2">
+                <div class="panel p-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <div>
+                    <p class="font-black text-slate-900">monthly-plant-summary.csv</p>
+                    <p class="text-xs text-slate-500">Daily compiled plant summary report (8 rows)</p>
+                  </div>
+                  <a href="reports/monthly-plant-summary.csv" download onclick="trackReportDownload('monthly-plant-summary.csv', 8)" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-black text-center">Download</a>
+                </div>
+
+                <div class="panel p-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <div>
+                    <p class="font-black text-slate-900">live-client-snapshot.csv</p>
+                    <p class="text-xs text-slate-500">Generated from current dashboard data</p>
+                  </div>
+                  <button onclick="downloadClientSnapshotCsv()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-black text-center">Download</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="data-table-wrap bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-lg font-black text-slate-900">Preview: Monthly Plant Summary</h3>
+                <span class="pill-tag pill-green">CSV Preview</span>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead class="bg-slate-50 border-b">
+                    <tr>
+                      <th class="px-3 py-2 text-left font-black">Client</th>
+                      <th class="px-3 py-2 text-left font-black">Plant</th>
+                      <th class="px-3 py-2 text-left font-black">Capacity (MLD)</th>
+                      <th class="px-3 py-2 text-left font-black">Status</th>
+                      <th class="px-3 py-2 text-left font-black">BOD</th>
+                      <th class="px-3 py-2 text-left font-black">COD</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y">
+                    <tr><td class="px-3 py-2">Taj Hotels Mumbai</td><td class="px-3 py-2">Plant A</td><td class="px-3 py-2">500</td><td class="px-3 py-2">Operational</td><td class="px-3 py-2">45</td><td class="px-3 py-2">120</td></tr>
+                    <tr><td class="px-3 py-2">Taj Hotels Mumbai</td><td class="px-3 py-2">Plant B</td><td class="px-3 py-2">450</td><td class="px-3 py-2">Warning</td><td class="px-3 py-2">78</td><td class="px-3 py-2">180</td></tr>
+                    <tr><td class="px-3 py-2">Indian Hotels Group</td><td class="px-3 py-2">Plant C</td><td class="px-3 py-2">400</td><td class="px-3 py-2">Operational</td><td class="px-3 py-2">38</td><td class="px-3 py-2">105</td></tr>
+                    <tr><td class="px-3 py-2">Indian Hotels Group</td><td class="px-3 py-2">Plant D</td><td class="px-3 py-2">350</td><td class="px-3 py-2">Operational</td><td class="px-3 py-2">41</td><td class="px-3 py-2">112</td></tr>
+                    <tr><td class="px-3 py-2">Indian Hotels Group</td><td class="px-3 py-2">Plant E</td><td class="px-3 py-2">300</td><td class="px-3 py-2">Operational</td><td class="px-3 py-2">39</td><td class="px-3 py-2">108</td></tr>
+                    <tr><td class="px-3 py-2">Metro Residency</td><td class="px-3 py-2">Plant F</td><td class="px-3 py-2">200</td><td class="px-3 py-2">Operational</td><td class="px-3 py-2">42</td><td class="px-3 py-2">118</td></tr>
+                    <tr><td class="px-3 py-2">Sunline Industries</td><td class="px-3 py-2">Plant G</td><td class="px-3 py-2">260</td><td class="px-3 py-2">Operational</td><td class="px-3 py-2">37</td><td class="px-3 py-2">102</td></tr>
+                    <tr><td class="px-3 py-2">Sunline Industries</td><td class="px-3 py-2">Plant H</td><td class="px-3 py-2">230</td><td class="px-3 py-2">Operational</td><td class="px-3 py-2">40</td><td class="px-3 py-2">110</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
 
         </div>
@@ -895,6 +1123,132 @@
         document.querySelector('.sidebar').classList.add('collapsed');
       }
     }
+
+    let trendChartRef = null;
+
+    function setTrendSeries(series) {
+      if (!trendChartRef) {
+        return;
+      }
+
+      const showBod = series === 'bod';
+      trendChartRef.data.datasets[0].hidden = !showBod;
+      trendChartRef.data.datasets[1].hidden = showBod;
+      trendChartRef.update();
+
+      const switchWrap = document.getElementById('trendSeriesSwitch');
+      if (!switchWrap) {
+        return;
+      }
+
+      switchWrap.querySelectorAll('.series-switch-btn').forEach(function (button) {
+        const isActive = button.getAttribute('data-series') === series;
+        button.classList.toggle('active', isActive);
+        button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+    }
+
+    function initTrendSeriesSwitch() {
+      const switchWrap = document.getElementById('trendSeriesSwitch');
+      if (!switchWrap) {
+        return;
+      }
+
+      switchWrap.querySelectorAll('.series-switch-btn').forEach(function (button) {
+        button.addEventListener('click', function () {
+          const series = button.getAttribute('data-series');
+          setTrendSeries(series);
+        });
+      });
+    }
+
+    let reportDownloadCount = 0;
+
+    function escapeCsvValue(value) {
+      const safeValue = value === null || value === undefined ? '' : String(value);
+      return '"' + safeValue.replace(/"/g, '""') + '"';
+    }
+
+    function updateReportStats(rowCount) {
+      const rowsEl = document.getElementById('reportRowsCount');
+      const countEl = document.getElementById('reportDownloadCount');
+      const updatedEl = document.getElementById('reportsLastUpdated');
+
+      if (rowsEl) {
+        rowsEl.textContent = String(rowCount);
+      }
+
+      if (countEl) {
+        countEl.textContent = String(reportDownloadCount);
+      }
+
+      if (updatedEl) {
+        updatedEl.textContent = 'Last download: ' + new Date().toLocaleString([], {
+          day: '2-digit',
+          month: 'short',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      }
+    }
+
+    function trackReportDownload(fileName, rowCount) {
+      reportDownloadCount += 1;
+      updateReportStats(rowCount || 0);
+      console.log('Report downloaded:', fileName);
+    }
+
+    function downloadClientSnapshotCsv() {
+      const headers = ['Client', 'Plant', 'Capacity_MLD', 'Status', 'Phone', 'Plant_Type', 'Submitted_At'];
+      const rows = [];
+
+      Object.keys(clientData).forEach(function (clientId) {
+        const client = clientData[clientId];
+        const inquiry = client.inquiry || {};
+
+        client.plants.forEach(function (plant) {
+          rows.push([
+            client.name,
+            plant.name,
+            plant.capacity,
+            plant.state,
+            inquiry.phoneNumber || '-',
+            inquiry.plantType || '-',
+            inquiry.submittedAt || '-'
+          ]);
+        });
+      });
+
+      const csvLines = [headers.map(escapeCsvValue).join(',')];
+      rows.forEach(function (row) {
+        csvLines.push(row.map(escapeCsvValue).join(','));
+      });
+
+      const csvContent = csvLines.join('\r\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const fileUrl = URL.createObjectURL(blob);
+      const dateTag = new Date().toISOString().slice(0, 10);
+      const link = document.createElement('a');
+
+      link.href = fileUrl;
+      link.download = 'live-client-snapshot-' + dateTag + '.csv';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(fileUrl);
+
+      reportDownloadCount += 1;
+      updateReportStats(rows.length);
+    }
+
+    function initializeReports() {
+      updateReportStats(8);
+      const updatedEl = document.getElementById('reportsLastUpdated');
+      if (updatedEl) {
+        updatedEl.textContent = 'Not downloaded yet';
+      }
+    }
+
     function initCharts() {
       new Chart(document.getElementById('statusChart'), {
         type: 'doughnut',
@@ -906,16 +1260,37 @@
         data: { labels: ['W1', 'W2', 'W3', 'W4'], datasets: [{ label: 'MLD', data: [120, 135, 150, 137], backgroundColor: '#3b82f6' }] },
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
       });
-      new Chart(document.getElementById('trendChart'), {
+      trendChartRef = new Chart(document.getElementById('trendChart'), {
         type: 'line',
         data: {
           labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
           datasets: [
-            { label: 'BOD', data: [45, 48, 42, 50, 46, 44, 43], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', tension: 0.4 },
-            { label: 'COD', data: [120, 125, 118, 130, 122, 120, 119], borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.1)', tension: 0.4 }
+            {
+              label: 'BOD',
+              data: [45, 48, 42, 50, 46, 44, 43],
+              borderColor: '#0ea5e9',
+              backgroundColor: 'rgba(14, 165, 233, 0.12)',
+              pointBackgroundColor: '#0284c7',
+              borderWidth: 3,
+              pointRadius: 3,
+              pointHoverRadius: 5,
+              tension: 0.4
+            },
+            {
+              label: 'COD',
+              data: [120, 125, 118, 130, 122, 120, 119],
+              borderColor: '#7c3aed',
+              backgroundColor: 'rgba(124, 58, 237, 0.12)',
+              pointBackgroundColor: '#6d28d9',
+              borderWidth: 3,
+              pointRadius: 3,
+              pointHoverRadius: 5,
+              hidden: true,
+              tension: 0.4
+            }
           ]
         },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
       });
       new Chart(document.getElementById('alertChart'), {
         type: 'bar',
@@ -928,6 +1303,9 @@
     }
     document.addEventListener('DOMContentLoaded', function () {
       initCharts();
+      initTrendSeriesSwitch();
+      setTrendSeries('bod');
+      initializeReports();
       loadFrontPageInquiries();
     });
     
