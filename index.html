@@ -127,7 +127,7 @@
                 
                 <!-- Navigation Items -->
                 <div class="hidden md:flex text-white h-full items-center gap-0 flex-1 justify-center">
-                    <a href="website.html" class="flex items-center justify-center gap-2 bg-[#1d4ed8] px-5 h-full transition hover:bg-[#1e3a8a] active:scale-95 text-sm font-semibold"><span>🏠</span> Home</a>
+                    <a href="index.html" class="flex items-center justify-center gap-2 bg-[#1d4ed8] px-5 h-full transition hover:bg-[#1e3a8a] active:scale-95 text-sm font-semibold"><span>🏠</span> Home</a>
                     <a href="#about" class="px-5 h-full flex items-center justify-center transition hover:bg-[#1d4ed8] text-sm font-semibold">About</a>
                     <a href="#solutions" class="px-5 h-full flex items-center justify-center bg-[#60a5fa]/30 transition hover:bg-[#60a5fa]/50 text-sm font-semibold">Solutions</a>
                     <a href="#inquiry" class="px-5 h-full flex items-center justify-center transition hover:bg-[#1d4ed8] text-sm font-semibold">Inquiry</a>
@@ -652,6 +652,27 @@
             alert('Demo requested successfully! Our team will contact you within 24 hours.');
             event.target.reset();
         }
+
+        function navigateToSupportSectionIfRequested() {
+            const params = new URLSearchParams(window.location.search);
+            const requestedFromSupport = params.get('support') === '1';
+            const shouldFocusInquiry = requestedFromSupport || window.location.hash === '#inquiry';
+
+            if (!shouldFocusInquiry) {
+                return;
+            }
+
+            const inquirySection = document.getElementById('inquiry');
+            if (!inquirySection) {
+                return;
+            }
+
+            setTimeout(function () {
+                inquirySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 80);
+        }
+
+        window.addEventListener('load', navigateToSupportSectionIfRequested);
     </script>
 </body>
 </html>
